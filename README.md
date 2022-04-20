@@ -1,4 +1,4 @@
- Backend de la borne Cocktail.me
+# Backend de la borne Cocktail.me
 
 ## Table des Matières
 
@@ -19,9 +19,8 @@ La technologie de base de données est *PostgreSQL*.
 > NOTE: L'API retourne toutes les valeurs au format JSON
 
 ### GET /bibs
-**arguments**: aucun <br/>
-**retourne**: liste de Bibs <br/>
-> **Exemple**: 
+**renvoie**: liste de Bibs <br/>
+> **Exemple de réponse**: 
 > 
 > ```
 > [
@@ -35,5 +34,32 @@ La technologie de base de données est *PostgreSQL*.
 >     type: 2,
 >     expiration_date: 1649455200
 >   }
+> ] 
+> ```
+
+### GET /recipes
+**renvoie**: liste de recettes faisables considérant les BIBs actuellement insérés dans la machine <br/>
+> **Exemple de réponse**: 
+> 
+> ```
+> [
+>   {
+>     id: 1,
+>     name: "mojito",
+>     photo: 1,
+>     quantities: {
+>       2: 200,
+>       4: 100
+>     }
+>   },
+>   {
+>     id: 2,
+>     name: "sex on the beach",
+>     photo: 2,
+>     quantities: {
+>       2: 100,
+>       4: 300
+>     }
+>   },
 > ] 
 > ```
