@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session
 from db import crud, models, schemas
 from db.schemas import BibCreate, UserCreate, RecipeCreate, IngredientCreate, ImageCreate
-from utils import diff
+from utils import diff, as_dict
 from base64 import b64encode
 import os
 
@@ -15,7 +15,7 @@ class SyncDependencyException(Exception):
 
 def mock_sync_bibs(db):
     """Sync bibs from the distant database to the local db."""
-    local_bibs = crud.get_bibs(db)
+    local_bibs = list(map(as_dict, crud.get_bibs(db)))
     mock_distant_bibs = [
         {'id': 1, 'name': "rhum blanc"},
         {'id': 2, 'name': "rhum ambré"},
@@ -45,90 +45,115 @@ def mock_sync_bibs(db):
 
 def mock_sync_users(db):
     """Sync users from the distant database to the local db."""
-    local_users = crud.get_users(db)
+    local_users = list(map(as_dict, crud.get_users(db)))
     mock_distant_users = [
         {'id': 1, 'name': 'Cocktail.me'}
     ]
-    difference = diff(local_users, mock_distant_users)
-    if os.environ['VERBOSE'] == 'true': print(f'downloaded {len(difference)} new user(s)')
-    for user in difference:
-        crud.create_user(db, UserCreate(**user))
-    pass
+    delete_count = 0
+    for local_user in local_users:
+        if local_user['id'] not in [user['id'] for user in mock_distant_users]:
+            crud.delete_user(db, local_user['id'])
+            delete_count += 1
+    add_count = 0
+    for local_user in mock_distant_users:
+        if local_user['id'] not in [user['id'] for user in local_users]:
+            crud.create_user(db, UserCreate(**local_user))
+            add_count += 1
+    if os.environ['VERBOSE'] == 'true': print(f'deleted {delete_count} user(s)')
 
 
 def mock_sync_recipes(db):
     """Sync recipes from the distant database to the local db."""
-    local_recipes = crud.get_recipes(db)
+    local_recipes = list(map(as_dict, crud.get_recipes(db)))
     mock_distant_recipes = [
-        {'id': 1, 'title': 'Mojito', 'description': 'mojito', 'image_id': 1, 'author_id': 1},
-        {'id': 2, 'title': 'Punch', 'description': 'punch', 'image_id': 2, 'author_id': 1},
-        {'id': 3, 'title': 'Piña colada', 'description': 'piña colada', 'image_id': 3, 'author_id': 1},
-        {'id': 4, 'title': 'Margarita', 'description': 'margarita', 'image_id': 4, 'author_id': 1},
-        {'id': 5, 'title': 'Cosmopolitan', 'description': 'cosmopolitan', 'image_id': 5, 'author_id': 1},
-        {'id': 6, 'title': 'Blue Lagoon', 'description': 'blue lagoon', 'image_id': 6, 'author_id': 1},
-        {'id': 7, 'title': 'Sex on the beach', 'description': 'sex on the beach', 'image_id': 7, 'author_id': 1},
+        {'id': 1, 'title': 'Mojito', 'description': 'mojito', 'author_id': 1},
+        {'id': 2, 'title': 'Punch', 'description': 'punch', 'author_id': 1},
+        {'id': 3, 'title': 'Piña colada', 'description': 'piña colada', 'author_id': 1},
+        {'id': 4, 'title': 'Margarita', 'description': 'margarita', 'author_id': 1},
+        {'id': 5, 'title': 'Cosmopolitan', 'description': 'cosmopolitan', 'author_id': 1},
+        {'id': 6, 'title': 'Blue Lagoon', 'description': 'blue lagoon', 'author_id': 1},
+        {'id': 7, 'title': 'Sex on the beach', 'description': 'sex on the beach', 'author_id': 1},
     ]
-    difference = diff(local_recipes, mock_distant_recipes)
-    if os.environ['VERBOSE'] == 'true': print(f'downloaded {len(difference)} new user(s)')
-    for recipe in difference:
-        crud.create_recipe(db, RecipeCreate(**recipe))
-    pass
+    delete_count = 0
+    for local_recipe in local_recipes:
+        if local_recipe['id'] not in [recipe['id'] for recipe in mock_distant_recipes]:
+            crud.delete_recipe(db, local_recipe['id'])
+            delete_count += 1
+    add_count = 0
+    for recipe in mock_distant_recipes:
+        if recipe['id'] not in [local_recipe['id'] for local_recipe in local_recipes]:
+            crud.create_recipe(db, RecipeCreate(**recipe))
+            add_count += 1
+    if os.environ['VERBOSE'] == 'true': print(f'deleted {delete_count} recipe(s), added {add_count} recipe(s)')
 
 
 def mock_sync_ingredients(db):
     """Sync ingredients from the distant database to the local db."""
-    local_ingredients = crud.get_ingredients(db)
+    local_ingredients = list(map(as_dict, crud.get_ingredients(db)))
     mock_distant_ingredients = [
-        {'recipe_id': 1, 'bib_id': 1, 'quantity': 60},
-        {'recipe_id': 1, 'bib_id': 14, 'quantity': 200},
-        {'recipe_id': 1, 'bib_id': 8, 'quantity': 30},
-        {'recipe_id': 1, 'bib_id': 12, 'quantity': 20},
-        {'recipe_id': 2, 'bib_id': 1, 'quantity': 100},
-        {'recipe_id': 2, 'bib_id': 12, 'quantity': 50},
-        {'recipe_id': 2, 'bib_id': 15, 'quantity': 100},
-        {'recipe_id': 2, 'bib_id': 16, 'quantity': 100},
-        {'recipe_id': 3, 'bib_id': 1, 'quantity': 40},
-        {'recipe_id': 3, 'bib_id': 2, 'quantity': 20},
-        {'recipe_id': 3, 'bib_id': 16, 'quantity': 120},
-        {'recipe_id': 3, 'bib_id': 17, 'quantity': 40},
-        {'recipe_id': 4, 'bib_id': 3, 'quantity': 50},
-        {'recipe_id': 4, 'bib_id': 4, 'quantity': 30},
-        {'recipe_id': 4, 'bib_id': 8, 'quantity': 20},
-        {'recipe_id': 5, 'bib_id': 5, 'quantity': 40},
-        {'recipe_id': 5, 'bib_id': 4, 'quantity': 20},
-        {'recipe_id': 5, 'bib_id': 9, 'quantity': 20},
-        {'recipe_id': 5, 'bib_id': 8, 'quantity': 10},
-        {'recipe_id': 6, 'bib_id': 5, 'quantity': 40},
-        {'recipe_id': 6, 'bib_id': 10, 'quantity': 30},
-        {'recipe_id': 6, 'bib_id': 7, 'quantity': 20},
-        {'recipe_id': 7, 'bib_id': 5, 'quantity': 30},
-        {'recipe_id': 7, 'bib_id': 16, 'quantity': 50},
-        {'recipe_id': 7, 'bib_id': 9, 'quantity': 60},
-        {'recipe_id': 7, 'bib_id': 18, 'quantity': 10},
+        {'recipe_id': 1, 'bib_id': 1, 'amount': 60},
+        {'recipe_id': 1, 'bib_id': 14, 'amount': 200},
+        {'recipe_id': 1, 'bib_id': 8, 'amount': 30},
+        {'recipe_id': 1, 'bib_id': 12, 'amount': 20},
+        {'recipe_id': 2, 'bib_id': 1, 'amount': 100},
+        {'recipe_id': 2, 'bib_id': 12, 'amount': 50},
+        {'recipe_id': 2, 'bib_id': 15, 'amount': 100},
+        {'recipe_id': 2, 'bib_id': 16, 'amount': 100},
+        {'recipe_id': 3, 'bib_id': 1, 'amount': 40},
+        {'recipe_id': 3, 'bib_id': 2, 'amount': 20},
+        {'recipe_id': 3, 'bib_id': 16, 'amount': 120},
+        {'recipe_id': 3, 'bib_id': 17, 'amount': 40},
+        {'recipe_id': 4, 'bib_id': 3, 'amount': 50},
+        {'recipe_id': 4, 'bib_id': 4, 'amount': 30},
+        {'recipe_id': 4, 'bib_id': 8, 'amount': 20},
+        {'recipe_id': 5, 'bib_id': 5, 'amount': 40},
+        {'recipe_id': 5, 'bib_id': 4, 'amount': 20},
+        {'recipe_id': 5, 'bib_id': 9, 'amount': 20},
+        {'recipe_id': 5, 'bib_id': 8, 'amount': 10},
+        {'recipe_id': 6, 'bib_id': 5, 'amount': 40},
+        {'recipe_id': 6, 'bib_id': 10, 'amount': 30},
+        {'recipe_id': 6, 'bib_id': 7, 'amount': 20},
+        {'recipe_id': 7, 'bib_id': 5, 'amount': 30},
+        {'recipe_id': 7, 'bib_id': 16, 'amount': 50},
+        {'recipe_id': 7, 'bib_id': 9, 'amount': 60},
+        {'recipe_id': 7, 'bib_id': 18, 'amount': 10},
     ]
-    difference = diff(local_ingredients, mock_distant_ingredients)
-    if os.environ['VERBOSE'] == 'true': print(f'downloaded {len(difference)} new user(s)')
-    for ingredient in difference:
-        crud.create_ingredient(db, IngredientCreate(**ingredient))
-    pass
+    delete_count = 0
+    for local_ingredient in local_ingredients:
+        if (local_ingredient['recipe_id'],local_ingredient['bib_id']) not in [(ingredient['recipe_id'],ingredient['bib_id']) for ingredient in mock_distant_ingredients]:
+            crud.delete_ingredient(db, local_ingredient['id'])
+            delete_count += 1
+    add_count = 0
+    for ingredient in mock_distant_ingredients:
+        if (ingredient['recipe_id'],ingredient['bib_id']) not in [(local_ingredient['recipe_id'],local_ingredient['bib_id']) for local_ingredient in local_ingredients]:
+            crud.create_ingredient(db, IngredientCreate(**ingredient))
+            add_count += 1
+    if os.environ['VERBOSE'] == 'true': print(f'deleted {delete_count} ingredient(s), added {add_count} ingredient(s)')
 
 
 def mock_sync_images(db):
     """Sync images from the distant database to the local db."""
-    local_images = crud.get_images(db)
+    local_images = list(map(as_dict,crud.get_images(db)))
     mock_distant_images = []
     for filename in os.listdir('mock/images'):
         with open(filename, 'rb') as file:
             mock_distant_images.append({'id': filename.split('.')[0], 'data': b64encode(file.read())})
-    difference = diff(local_images, mock_distant_images)
-    if os.environ['VERBOSE'] == 'true': print(f'downloaded {len(difference)} new user(s)')
-    for image in difference:
-        crud.create_image(db, ImageCreate(**image))
+    delete_count = 0
+    for local_image in local_images:
+        if local_image['id'] not in [image['id'] for image in mock_distant_images]:
+            crud.delete_image(db, local_image['id'])
+            delete_count += 1
+    add_count = 0
+    for image in mock_distant_images:
+        if image['id'] not in [local_image['id'] for local_image in local_images]:
+            crud.create_image(db, ImageCreate(**image))
+            add_count += 1
+    if os.environ['VERBOSE'] == 'true': print(f'deleted {delete_count} image(s), added {add_count} image(s)')
 
 
 def mock_sync_orders(db):
     """Sync orders from the local database to the distant db."""
-    local_orders = crud.get_orders(db)
+    local_orders = list(map(as_dict, crud.get_orders(db)))
     mock_distant_orders = []
     if os.environ['VERBOSE'] == 'true': print(f'sent {len(local_orders)} new order(s)')
     for order in local_orders:
@@ -205,13 +230,13 @@ def sync_all(db, operations=OPERATIONS):
     if os.environ['VERBOSE'] == 'true': print('[i] === Start of Sync ===')
     done = set()
     # 1. Execute all operations with no dependencies
-    for operation, dependencies in DEPENDENCIES:
+    for operation, dependencies in DEPENDENCIES.items():
         if len(dependencies) == 0:
             operations[operation](db)
             done.add(operation)
     # 2. Execute all operations with dependencies
     while len(done) < len(DEPENDENCIES):
-        for operation, dependencies in {item for item in DEPENDENCIES.items() if item[0] not in done}:
+        for operation, dependencies in [item for item in DEPENDENCIES.items() if item[0] not in done]:
             try:
                 for dependency in dependencies:
                     if dependency not in done:

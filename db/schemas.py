@@ -23,7 +23,6 @@ class UserBase(BaseModel):
 
 class UserCreate(UserBase):
     id: int
-    ...
 
 
 class User(UserBase):
@@ -36,12 +35,10 @@ class RecipeBase(BaseModel):
     title: str
     description: str
     author_id: int
-    image_id: int
 
 
 class RecipeCreate(RecipeBase):
     id: int
-    ...
 
 
 class Recipe(RecipeBase):
