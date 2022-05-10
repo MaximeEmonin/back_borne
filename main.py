@@ -7,6 +7,7 @@ from db.database import SessionLocal, engine
 from dotenv import load_dotenv
 
 from sync import mock_sync_all, sync_all
+from fastapi.middleware.cors import CORSMiddleware
 
 import os
 
@@ -15,6 +16,20 @@ load_dotenv()
 models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
+
+origins = [
+    "http://localhost:3000",
+    "https://localhost",
+    "*",
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 
 if os.environ["MOCK_DISTANT_API"] == "true":
