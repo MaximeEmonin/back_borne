@@ -13,8 +13,10 @@ def get_db():
 
 
 def reset_db():
-    db = get_db()
+    db = next(get_db())
     users = db.query(models.User).all()
+    for user in users:
+        delete_user(db, user.id)
 
 
 commands = {

@@ -1,4 +1,4 @@
-from sqlalchemy import Column, ForeignKey, Integer, String, DateTime, Table
+from sqlalchemy import Column, ForeignKey, Integer, String, DateTime, Table, Boolean
 from sqlalchemy.orm import relationship
 
 from .database import Base
@@ -9,6 +9,7 @@ class User(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String(50), nullable=False)
+    role = Column(String(50), nullable=False)
 
 
 class Bib(Base):
@@ -60,3 +61,15 @@ class Order(Base):
 
     consumer = relationship("User")
     recipe = relationship("Recipe")
+
+
+class Session(Base):
+    __tablename__ = "sessions"
+
+    id = Column(Integer, primary_key=True, index=True)
+    token = Column(String, index=True)
+    user_id = Column(Integer, ForeignKey("users.id"), index=True)
+    max_date = Column(DateTime, index=True)
+    revoked = Column(Boolean, index=True)
+
+    user = relationship("User")

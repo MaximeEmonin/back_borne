@@ -25,6 +25,10 @@ def get_users(db: Session, skip: int = 0, limit: int = 100):
     return db.query(models.User).offset(skip).limit(limit).all()
 
 
+def get_user_by_name(db: Session, name: str):
+    return db.query(models.User).filter(models.User.name == name).first()
+
+
 def create_user(db: Session, user: schemas.UserCreate):
     db_user = models.User(**(user.dict()))
     db.add(db_user)
@@ -106,3 +110,11 @@ def delete_order(db: Session, order_id: int):
     db.delete(db_order)
     db.commit()
     return db_order
+
+
+def create_session(db: Session, session: schemas.SessionCreate):
+    db_session = models.Session(**session.dict())
+    db.add(db_session)
+    db.commit()
+    db.refresh(db_session)
+    return db_session

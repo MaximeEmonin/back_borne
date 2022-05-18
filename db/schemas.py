@@ -19,6 +19,7 @@ class Bib(BibBase):
 
 class UserBase(BaseModel):
     name: str
+    role: str
 
 
 class UserCreate(UserBase):
@@ -91,6 +92,23 @@ class OrderCreate(OrderBase):
 
 
 class Order(OrderBase):
+
+    class Config:
+        orm_mode = True
+
+
+class SessionBase(BaseModel):
+    user_id: int
+    max_date: datetime
+    token: str
+
+
+class SessionCreate(SessionBase):
+    ...
+
+
+class Session(SessionBase):
+    revoked: bool
 
     class Config:
         orm_mode = True

@@ -36,18 +36,24 @@ def mock_sync_bibs(db):
         {'id': 17, 'name': "lait de coco"},
         {'id': 18, 'name': "crème de pêche"}
     ]
-    difference = diff(local_bibs, mock_distant_bibs)
-    if os.environ['VERBOSE'] == 'true': print(f'downloaded {len(difference)} new bib(s)')
-
-    for bib in difference:
-        crud.create_bib(db, BibCreate(**bib))
+    delete_count = 0
+    for local_bib in local_bibs:
+        if local_bib['id'] not in [bib['id'] for bib in mock_distant_bibs]:
+            crud.delete_bib(db, local_bib['id'])
+            delete_count += 1
+    add_count = 0
+    for local_bib in mock_distant_bibs:
+        if local_bib['id'] not in [bib['id'] for bib in local_bibs]:
+            crud.create_bib(db, BibCreate(**local_bib))
+            add_count += 1
+    if os.environ['VERBOSE'] == 'true': print(f'deleted {delete_count} bib(s), added {add_count} bib(s)')
 
 
 def mock_sync_users(db):
     """Sync users from the distant database to the local db."""
     local_users = list(map(as_dict, crud.get_users(db)))
     mock_distant_users = [
-        {'id': 1, 'name': 'Cocktail.me'}
+        {'id': 1, 'name': 'Cocktail.me', 'role': 'admin'}
     ]
     delete_count = 0
     for local_user in local_users:
@@ -59,7 +65,7 @@ def mock_sync_users(db):
         if local_user['id'] not in [user['id'] for user in local_users]:
             crud.create_user(db, UserCreate(**local_user))
             add_count += 1
-    if os.environ['VERBOSE'] == 'true': print(f'deleted {delete_count} user(s)')
+    if os.environ['VERBOSE'] == 'true': print(f'deleted {delete_count} user(s), added {add_count} user(s)')
 
 
 def mock_sync_recipes(db):
