@@ -118,3 +118,17 @@ def create_session(db: Session, session: schemas.SessionCreate):
     db.commit()
     db.refresh(db_session)
     return db_session
+
+
+def get_sessions_by_user(db: Session, user_id: int):
+    return db.query(models.Session).filter(models.Session.user_id == user_id).all()
+
+
+def revoke_all_sessions(db: Session, user_name: str):
+    db_user = get_user_by_name(db, user_name)
+    db_sessions = get_sessions_by_user(db, db_user.id)
+    for session in db_sessions:
+        # update revoked field
+        session.revoked = True
+        db.add(session)
+    db.commit()

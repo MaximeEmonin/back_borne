@@ -52,7 +52,7 @@ def get_db():
 sync_all(list(get_db())[0])
 
 
-@app.get('/login/')
+@app.post('/login/')
 def login(user: str, password: str, db: Session = Depends(get_db)):
     """ admin login """
     user = crud.get_user_by_name(db, user)
@@ -63,10 +63,19 @@ def login(user: str, password: str, db: Session = Depends(get_db)):
     session = crud.create_session(db, SessionCreate(
         user_id=user.id,
         token=token,
-        max_date=datetime.now() + timedelta(hours=2)
+        max_date=datetime.now() + timedelta(hours=2),
+        revoked=False
     ))
     return {"token": session.token}
 
+
+@app.post('/logout/')
+def logout(user: str, db: Session = Depends(get_db)):
+    """ admin logout """
+    # set revoked to true for all sessions of user
+    user = crud.revoke_all_sessions(db, user)
+
+    return {"message": "logged out"}
 
 
 @app.get('/mock_recipes/')

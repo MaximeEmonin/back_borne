@@ -101,6 +101,7 @@ class SessionBase(BaseModel):
     user_id: int
     max_date: datetime
     token: str
+    revoked: bool
 
 
 class SessionCreate(SessionBase):
@@ -108,7 +109,6 @@ class SessionCreate(SessionBase):
 
 
 class Session(SessionBase):
-    revoked: bool
 
     class Config:
         orm_mode = True
