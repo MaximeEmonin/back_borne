@@ -17,27 +17,25 @@ def mock_sync_bibs(db):
     """Sync bibs from the distant database to the local db."""
     local_bibs = list(map(as_dict, crud.get_bibs(db)))
     mock_distant_bibs = [
-        {'id': 1, 'name': "rhum blanc"},
-        {'id': 2, 'name': "rhum ambré"},
-        {'id': 3, 'name': "tequila"},
-        {'id': 4, 'name': "grand marnier"},
-        {'id': 5, 'name': "vodka"},
-        {'id': 6, 'name': "cognac"},
-        {'id': 7, 'name': "jus de citron"},
-        {'id': 8, 'name': "jus de citron vert"},
-        {'id': 9, 'name': "jus de cranberry"},
-        {'id': 10, 'name': "curaçao bleu"},
-        {'id': 11, 'name': "sirop de menthe"},
-        {'id': 12, 'name': "sirop de sucre de canne"},
-        {'id': 13, 'name': "sirop de melon"},
-        {'id': 14, 'name': "eau gazeuse"},
-        {'id': 15, 'name': "jus d'orange"},
-        {'id': 16, 'name': "jus d'ananas"},
-        {'id': 17, 'name': "lait de coco"},
-        {'id': 18, 'name': "crème de pêche"}
+        {'id': 1, 'name': "rhum blanc", 'alcool': True},
+        {'id': 2, 'name': "rhum ambré", 'alcool': True},
+        {'id': 3, 'name': "tequila", 'alcool': True},
+        {'id': 4, 'name': "grand marnier", 'alcool': True},
+        {'id': 5, 'name': "vodka", 'alcool': True},
+        {'id': 6, 'name': "cognac", 'alcool': True},
+        {'id': 7, 'name': "jus de citron", 'alcool': False},
+        {'id': 8, 'name': "jus de citron vert", 'alcool': False},
+        {'id': 9, 'name': "jus de cranberry", 'alcool': False},
+        {'id': 10, 'name': "curaçao bleu", 'alcool': True},
+        {'id': 11, 'name': "sirop de menthe", 'alcool': False},
+        {'id': 12, 'name': "sirop de sucre de canne", 'alcool': False},
+        {'id': 13, 'name': "sirop de melon", 'alcool': False},
+        {'id': 14, 'name': "eau gazeuse", 'alcool': False},
+        {'id': 15, 'name': "jus d'orange", 'alcool': False},
+        {'id': 16, 'name': "jus d'ananas", 'alcool': False},
+        {'id': 17, 'name': "lait de coco", 'alcool': False},
+        {'id': 18, 'name': "crème de pêche", 'alcool': True}
     ]
-    # if there is a difference in table cols
-
 
     delete_count = 0
     for local_bib in local_bibs:

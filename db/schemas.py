@@ -5,6 +5,7 @@ from datetime import datetime
 class BibBase(BaseModel):
     name: str
     id: int
+    alcool: bool
 
 
 class BibCreate(BibBase):
@@ -15,6 +16,11 @@ class Bib(BibBase):
 
     class Config:
         orm_mode = True
+
+
+class DistantUserBase(BaseModel):
+    user: str
+    password: str
 
 
 class UserBase(BaseModel):

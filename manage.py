@@ -4,6 +4,7 @@ from db import models
 from db.crud import delete_user, delete_bib, delete_recipe, delete_ingredient, delete_image, delete_order
 from pandas.io import sql
 
+
 def get_db():
     db = SessionLocal()
     try:

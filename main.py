@@ -9,7 +9,7 @@ from db.database import SessionLocal, engine
 
 from dotenv import load_dotenv
 
-from db.schemas import SessionCreate
+from db.schemas import SessionCreate, DistantUserBase
 from sync import mock_sync_all, sync_all
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -53,9 +53,9 @@ sync_all(list(get_db())[0])
 
 
 @app.post('/login/')
-def login(user: str, password: str, db: Session = Depends(get_db)):
+def login(user_request: DistantUserBase, db: Session = Depends(get_db)):
     """ admin login """
-    user = crud.get_user_by_name(db, user)
+    user = crud.get_user_by_name(db, user_request.user)
     if user is None:
         return {"error": "User not found"}
     token = str(uuid.uuid4())
@@ -88,6 +88,11 @@ def get_mock_recipes(db: Session = Depends(get_db)):
         {"id": 4, "name": "Mock Recipe 4"},
     ]
 
+
+@app.get('/recipes', response_model=schemas.Recipe)
+def get_recipes(db: Session = Depends(get_db), alcool=True):
+    """ Send all feasible recipes """
+    recipes = crud.get_recipes(db)
 
 
 # @app.post("/users/", response_model=schemas.User)

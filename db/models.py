@@ -17,6 +17,7 @@ class Bib(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String(255), nullable=False)
+    alcool = Column(Boolean, nullable=False)
 
 
 class Recipe(Base):
