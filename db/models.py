@@ -1,4 +1,4 @@
-from sqlalchemy import Column, ForeignKey, Integer, String, DateTime, Table, Boolean
+from sqlalchemy import Column, ForeignKey, Integer, String, DateTime, Table, Boolean, Float
 from sqlalchemy.orm import relationship
 
 from .database import Base
@@ -26,6 +26,7 @@ class Recipe(Base):
     title = Column(String, index=True)
     description = Column(String, index=True)
     author_id = Column(Integer, ForeignKey("users.id"))
+    price = Column(Float, index=True)
 
     image = relationship("Image", back_populates="recipe", uselist=False)
     ingredients = relationship("Ingredient")

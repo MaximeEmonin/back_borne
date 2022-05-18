@@ -36,6 +36,7 @@ class RecipeBase(BaseModel):
     title: str
     description: str
     author_id: int
+    price: float
 
 
 class RecipeCreate(RecipeBase):

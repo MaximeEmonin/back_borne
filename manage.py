@@ -2,7 +2,7 @@ import sys
 from db.database import SessionLocal, engine
 from db import models
 from db.crud import delete_user, delete_bib, delete_recipe, delete_ingredient, delete_image, delete_order
-
+from pandas.io import sql
 
 def get_db():
     db = SessionLocal()
@@ -13,10 +13,9 @@ def get_db():
 
 
 def reset_db():
-    db = next(get_db())
-    users = db.query(models.User).all()
-    for user in users:
-        delete_user(db, user.id)
+    for table in ['bibs', 'users', 'images', 'ingredients', 'orders', 'recipes', 'sessions']:
+        sql.execute(f"DROP TABLE IF EXISTS {table} CASCADE;", engine)
+
 
 
 commands = {

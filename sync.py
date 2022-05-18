@@ -36,6 +36,9 @@ def mock_sync_bibs(db):
         {'id': 17, 'name': "lait de coco"},
         {'id': 18, 'name': "crème de pêche"}
     ]
+    # if there is a difference in table cols
+
+
     delete_count = 0
     for local_bib in local_bibs:
         if local_bib['id'] not in [bib['id'] for bib in mock_distant_bibs]:
@@ -72,13 +75,13 @@ def mock_sync_recipes(db):
     """Sync recipes from the distant database to the local db."""
     local_recipes = list(map(as_dict, crud.get_recipes(db)))
     mock_distant_recipes = [
-        {'id': 1, 'title': 'Mojito', 'description': 'mojito', 'author_id': 1},
-        {'id': 2, 'title': 'Punch', 'description': 'punch', 'author_id': 1},
-        {'id': 3, 'title': 'Piña colada', 'description': 'piña colada', 'author_id': 1},
-        {'id': 4, 'title': 'Margarita', 'description': 'margarita', 'author_id': 1},
-        {'id': 5, 'title': 'Cosmopolitan', 'description': 'cosmopolitan', 'author_id': 1},
-        {'id': 6, 'title': 'Blue Lagoon', 'description': 'blue lagoon', 'author_id': 1},
-        {'id': 7, 'title': 'Sex on the beach', 'description': 'sex on the beach', 'author_id': 1},
+        {'id': 1, 'title': 'Mojito', 'description': 'mojito', 'author_id': 1, 'price': 5},
+        {'id': 2, 'title': 'Punch', 'description': 'punch', 'author_id': 1, 'price': 5},
+        {'id': 3, 'title': 'Piña colada', 'description': 'piña colada', 'author_id': 1, 'price': 5},
+        {'id': 4, 'title': 'Margarita', 'description': 'margarita', 'author_id': 1, 'price': 5},
+        {'id': 5, 'title': 'Cosmopolitan', 'description': 'cosmopolitan', 'author_id': 1, 'price': 5},
+        {'id': 6, 'title': 'Blue Lagoon', 'description': 'blue lagoon', 'author_id': 1, 'price': 5},
+        {'id': 7, 'title': 'Sex on the beach', 'description': 'sex on the beach', 'author_id': 1, 'price': 5},
     ]
     delete_count = 0
     for local_recipe in local_recipes:
