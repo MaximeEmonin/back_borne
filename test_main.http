@@ -37,3 +37,24 @@ Content-Type: application/json
     "bib_id":"15",
     "amount":"3000"
 }
+
+###
+
+POST http://localhost:8000/bibs/load/
+Content-Type: application/json
+
+{
+    "bib_id":"11",
+    "amount":"3000"
+}
+
+###
+
+PATCH http://localhost:8000/bibs/replace
+Content-Type: application/json
+
+{
+    "old_bib_id":"1",
+    "new_bib_type":"14",
+    "new_bib_amount":"3000"
+}

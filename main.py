@@ -97,9 +97,7 @@ def get_recipes(alcool: bool, db: Session = Depends(get_db)):
         recipes = new_recipes
     # filter not feasible recipes because bib not loaded
     new_recipes: list[Recipe] = []
-    print('recipes', recipes)
     for recipe in recipes:
-        print('checking recipe', recipe.title)
         adding = True
         for ingredient in recipe.ingredients:
             if ingredient.bib.id not in [bib.bib.id for bib in loaded_bibs]:
@@ -108,7 +106,6 @@ def get_recipes(alcool: bool, db: Session = Depends(get_db)):
         if adding:
             new_recipes.append(recipe)
     recipes = new_recipes
-    print('recipes', recipes)
     # filter not feasible recipes because not enough amount in bibs
     not_feasible_recipes = []
     feasible_recipes = []
@@ -157,9 +154,10 @@ def load_bib(bib_request: schemas.LoadedBibCreate, db: Session = Depends(get_db)
 @app.patch('/bibs/replace', response_model=list[schemas.LoadedBib])
 def replace_loaded_bib(replacement: LoadedBibReplacement, db: Session = Depends(get_db)):
     """ Replace loaded bib """
+    print(replacement)
     loaded_bibs = crud.get_loaded_bibs(db)
     bibs = crud.get_bibs(db)
-    if replacement.old_bib_id not in map(lambda x: x.bib.id, loaded_bibs):
+    if replacement.old_bib_id not in map(lambda x: x.id, loaded_bibs):
         raise HTTPException(status_code=404, detail="Bib not found")
 
     if replacement.new_bib_type not in map(lambda x: x.id, bibs):
