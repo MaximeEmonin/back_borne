@@ -86,6 +86,7 @@ class RecipeCreate(RecipeBase):
 
 
 class Recipe(RecipeBase):
+    id: int
     ingredients: list[Ingredient]
 
     class Config:
