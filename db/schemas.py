@@ -1,3 +1,5 @@
+from typing import TypedDict
+
 from pydantic import BaseModel
 from datetime import datetime
 
@@ -90,6 +92,11 @@ class Recipe(RecipeBase):
         orm_mode = True
 
 
+class RecipesResponse(TypedDict):
+    feasible: list[Recipe]
+    not_feasible: list[Recipe]
+
+
 class OrderBase(BaseModel):
     machine_id: str
     recipe_id: int
@@ -137,3 +144,9 @@ class LoadedBib(LoadedBibBase):
 
     class Config:
         orm_mode = True
+
+
+class LoadedBibReplacement(BaseModel):
+    old_bib_id: int
+    new_bib_type: int
+    new_bib_amount: int = 3000

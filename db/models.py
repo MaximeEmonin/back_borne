@@ -82,7 +82,7 @@ class LoadedBib(Base):
     __tablename__ = "loaded_bibs"
 
     id = Column(Integer, primary_key=True, index=True)
-    bib_id = Column(Integer, ForeignKey("bibs.id"))
+    bib_id = Column(Integer, ForeignKey("bibs.id"), index=True)
     amount = Column(Integer, index=True)
 
     bib = relationship("Bib")

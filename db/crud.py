@@ -1,5 +1,8 @@
+from typing import List
+
 from sqlalchemy.orm import Session
 from . import models, schemas
+from .schemas import LoadedBib
 
 
 class BIBException(Exception):
@@ -51,7 +54,7 @@ def delete_user(db: Session, user_id: int):
     return db_user
 
 
-def get_recipes(db: Session, skip: int = 0, limit: int = 100):
+def get_recipes(db: Session, skip: int = 0, limit: int = 100) -> List[models.Recipe]:
     return db.query(models.Recipe).offset(skip).limit(limit).all()
 
 
@@ -157,7 +160,7 @@ def delete_all_sessions(db: Session, user_name: str):
     db.commit()
 
 
-def get_loaded_bibs(db: Session):
+def get_loaded_bibs(db: Session) -> List[LoadedBib]:
     """ Get all loaded bibs """
     return db.query(models.LoadedBib).all()
 
