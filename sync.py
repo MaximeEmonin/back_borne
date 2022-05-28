@@ -173,6 +173,27 @@ def mock_sync_orders(db):
         crud.delete_order(db, order['id'])
 
 
+def mock_sync_loaded_bibs(db):
+    """ Add loaded bibs to the local database, for test purposes. """
+    local_loaded_bibs = list(map(as_dict, crud.get_loaded_bibs(db)))
+    mock_distant_loaded_bibs = [
+        {'bib_id': 1, 'amount': 3000},
+        {'bib_id': 14, 'amount': 3000},
+        {'bib_id': 8, 'amount': 3000},
+        {'bib_id': 12, 'amount': 3000},
+        {'bib_id': 11, 'amount': 3000},
+    ]
+    delete_count = 0
+    for local_loaded_bib in local_loaded_bibs:
+        if local_loaded_bib['bib_id'] not in [loaded_bib['bib_id'] for loaded_bib in mock_distant_loaded_bibs]:
+            crud.delete_loaded_bib(db, local_loaded_bib['id'])
+            delete_count += 1
+    add_count = 0
+    for loaded_bib in mock_distant_loaded_bibs:
+        if loaded_bib['bib_id'] not in [local_loaded_bib['bib_id'] for local_loaded_bib in local_loaded_bibs]:
+            crud.create_loaded_bib(db, **loaded_bib)
+            add_count += 1
+    if os.environ['VERBOSE'] == 'true': print(f'deleted {delete_count} loaded_bib(s), added {add_count} loaded_bib(s)')
 # ---------------------------------------------------------------------------------------------------------------------
 
 
@@ -214,7 +235,8 @@ MOCK_OPERATIONS = {
     'recipes': mock_sync_recipes,
     'ingredients': mock_sync_ingredients,
     'images': mock_sync_images,
-    'orders': mock_sync_orders
+    'orders': mock_sync_orders,
+    'loaded_bibs': mock_sync_loaded_bibs,
 }
 
 OPERATIONS = {
@@ -232,7 +254,8 @@ DEPENDENCIES = {
     'recipes': ['bibs', 'users'],
     'ingredients': ['bibs', 'recipes'],
     'orders': ['recipes', 'users'],
-    'images': ['recipes']
+    'images': ['recipes'],
+    'loaded_bibs': ['bibs']
 }
 
 # ---------------------------------------------------------------------------------------------------------------------
