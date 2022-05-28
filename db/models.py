@@ -40,6 +40,8 @@ class Ingredient(Base):
     bib_id = Column(Integer, ForeignKey('bibs.id'), primary_key=True)
     amount = Column(Integer, primary_key=True)
 
+    bib = relationship("Bib")
+
 
 class Image(Base):
     __tablename__ = "images"

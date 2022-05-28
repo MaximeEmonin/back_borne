@@ -41,23 +41,6 @@ class User(UserBase):
         orm_mode = True
 
 
-class RecipeBase(BaseModel):
-    title: str
-    description: str
-    author_id: int
-    price: float
-
-
-class RecipeCreate(RecipeBase):
-    id: int
-
-
-class Recipe(RecipeBase):
-
-    class Config:
-        orm_mode = True
-
-
 class ImageBase(BaseModel):
     id: int
     data: str
@@ -74,16 +57,34 @@ class Image(ImageBase):
 
 
 class IngredientBase(BaseModel):
-    recipe_id: int
-    bib_id: int
     amount: int
 
 
 class IngredientCreate(IngredientBase):
-    ...
+    bib_id: int
+    recipe_id: int
 
 
 class Ingredient(IngredientBase):
+    bib: Bib
+
+    class Config:
+        orm_mode = True
+
+
+class RecipeBase(BaseModel):
+    title: str
+    description: str
+    author_id: int
+    price: float
+
+
+class RecipeCreate(RecipeBase):
+    id: int
+
+
+class Recipe(RecipeBase):
+    ingredients: list[Ingredient]
 
     class Config:
         orm_mode = True
