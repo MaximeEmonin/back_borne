@@ -20,5 +20,5 @@ Content-Type: application/json
 
 ###
 
-GET http://localhost:8000/recipes/?alcool=true
+GET http://localhost:8000/recipes/?alcool=false
 Accept: application/json

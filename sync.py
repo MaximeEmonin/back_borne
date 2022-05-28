@@ -80,6 +80,8 @@ def mock_sync_recipes(db):
         {'id': 5, 'title': 'Cosmopolitan', 'description': 'cosmopolitan', 'author_id': 1, 'price': 5},
         {'id': 6, 'title': 'Blue Lagoon', 'description': 'blue lagoon', 'author_id': 1, 'price': 5},
         {'id': 7, 'title': 'Sex on the beach', 'description': 'sex on the beach', 'author_id': 1, 'price': 5},
+        {'id': 8, 'title': 'Jus d\'orange', 'description': 'jus d\'orange', 'author_id': 1, 'price': 3},
+        {'id': 9, 'title': 'Diabolo Menthe', 'description': 'diabolo menthe', 'author_id': 1, 'price': 3},
     ]
     delete_count = 0
     for local_recipe in local_recipes:
@@ -124,6 +126,9 @@ def mock_sync_ingredients(db):
         {'recipe_id': 7, 'bib_id': 16, 'amount': 50},
         {'recipe_id': 7, 'bib_id': 9, 'amount': 60},
         {'recipe_id': 7, 'bib_id': 18, 'amount': 10},
+        {'recipe_id': 8, 'bib_id': 15, 'amount': 200},
+        {'recipe_id': 9, 'bib_id': 14, 'amount': 180},
+        {'recipe_id': 9, 'bib_id': 11, 'amount': 20},
     ]
     delete_count = 0
     for local_ingredient in local_ingredients:
