@@ -22,3 +22,8 @@ Content-Type: application/json
 
 GET http://localhost:8000/recipes/?alcool=false
 Accept: application/json
+
+###
+
+GET http://localhost:8000/images/1
+Accept: application/json

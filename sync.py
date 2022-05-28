@@ -145,11 +145,11 @@ def mock_sync_ingredients(db):
 
 def mock_sync_images(db):
     """Sync images from the distant database to the local db."""
-    local_images = list(map(as_dict,crud.get_images(db)))
+    local_images = list(map(as_dict, crud.get_images(db)))
     mock_distant_images = []
     for filename in os.listdir('mock/images'):
-        with open(filename, 'rb') as file:
-            mock_distant_images.append({'id': filename.split('.')[0], 'data': b64encode(file.read())})
+        with open('mock/images/'+filename, 'rb') as file:
+            mock_distant_images.append({'id': int(filename.split('.')[0]), 'recipe_id': filename.split('.')[0], 'data': b64encode(file.read())})
     delete_count = 0
     for local_image in local_images:
         if local_image['id'] not in [image['id'] for image in mock_distant_images]:
@@ -232,6 +232,7 @@ DEPENDENCIES = {
     'recipes': ['bibs', 'users'],
     'ingredients': ['bibs', 'recipes'],
     'orders': ['recipes', 'users'],
+    'images': ['recipes']
 }
 
 # ---------------------------------------------------------------------------------------------------------------------

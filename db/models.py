@@ -47,7 +47,7 @@ class Image(Base):
     __tablename__ = "images"
 
     id = Column(Integer, primary_key=True, index=True)
-    data = Column(String, index=True)
+    data = Column(String)
     recipe_id = Column(Integer, ForeignKey("recipes.id"))
 
     recipe = relationship("Recipe", back_populates="image")
@@ -76,3 +76,13 @@ class Session(Base):
     max_date = Column(DateTime, index=True)
 
     user = relationship("User")
+
+
+class LoadedBib(Base):
+    __tablename__ = "loaded_bibs"
+
+    id = Column(Integer, primary_key=True, index=True)
+    bib_id = Column(Integer, ForeignKey("bibs.id"))
+    amount = Column(Integer, index=True)
+
+    bib = relationship("Bib")

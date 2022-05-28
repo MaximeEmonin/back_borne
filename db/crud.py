@@ -2,6 +2,13 @@ from sqlalchemy.orm import Session
 from . import models, schemas
 
 
+class BIBException(Exception):
+    """
+    Exception for BIB errors.
+    """
+    pass
+
+
 def get_bibs(db: Session, skip: int = 0, limit: int = 100):
     return db.query(models.Bib).offset(skip).limit(limit).all()
 
@@ -148,3 +155,33 @@ def delete_all_sessions(db: Session, user_name: str):
     for db_session in db_sessions:
         db.delete(db_session)
     db.commit()
+
+
+def get_loaded_bibs(db: Session):
+    """ Get all loaded bibs """
+    return db.query(models.LoadedBib).all()
+
+
+def create_loaded_bib(db: Session, bib_id: int, amount: int = 3000):
+    """ Create a new loaded_bib object """
+    if len(get_loaded_bibs(db)) > 6:
+        raise BIBException("There are already 6 loaded bibs. Cannot load more.")
+
+    db_loaded_bib = models.LoadedBib(bib_id=bib_id, amount=amount)
+    db.add(db_loaded_bib)
+    db.commit()
+    db.refresh(db_loaded_bib)
+    return db_loaded_bib
+
+
+def delete_loaded_bib(db: Session, loaded_bib_id: int):
+    """ Delete a loaded_bib object """
+    db_loaded_bib = db.query(models.LoadedBib).get(loaded_bib_id)
+    db.delete(db_loaded_bib)
+    db.commit()
+    return db_loaded_bib
+
+
+def get_image(db: Session, recipe_id: int):
+    """ Get the image for a recipe. """
+    return db.query(models.Image).filter(models.Image.recipe_id == recipe_id).first()

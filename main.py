@@ -94,3 +94,10 @@ def get_recipes(alcool: bool, db: Session = Depends(get_db)):
         return new_recipes
     return recipes
 
+
+@app.get('/images/{recipe_id}', response_model=schemas.Image)
+def get_image(recipe_id: int, db: Session = Depends(get_db)):
+    """ Send image of recipe """
+    print(recipe_id)
+    image = crud.get_image(db, recipe_id)
+    return image

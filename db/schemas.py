@@ -42,12 +42,12 @@ class User(UserBase):
 
 
 class ImageBase(BaseModel):
-    id: int
     data: str
+    recipe_id: int
 
 
 class ImageCreate(ImageBase):
-    ...
+    id: int
 
 
 class Image(ImageBase):
@@ -119,6 +119,21 @@ class SessionCreate(SessionBase):
 
 
 class Session(SessionBase):
+
+    class Config:
+        orm_mode = True
+
+
+class LoadedBibBase(BaseModel):
+    amount: int
+
+
+class LoadedBibCreate(LoadedBibBase):
+    bib_id: int
+
+
+class LoadedBib(LoadedBibBase):
+    bib: Bib
 
     class Config:
         orm_mode = True

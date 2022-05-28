@@ -14,7 +14,7 @@ def get_db():
 
 
 def reset_db():
-    for table in ['bibs', 'users', 'images', 'ingredients', 'orders', 'recipes', 'sessions']:
+    for table in ['bibs', 'users', 'images', 'ingredients', 'orders', 'recipes', 'sessions', 'loaded_bibs']:
         sql.execute(f"DROP TABLE IF EXISTS {table} CASCADE;", engine)
 
 
