@@ -1,4 +1,4 @@
-from sqlalchemy import Column, ForeignKey, Integer, String, DateTime, Table, Boolean, Float
+from sqlalchemy import Column, ForeignKey, Integer, String, DateTime, Text, Boolean, Float
 from sqlalchemy.orm import relationship
 
 from .database import Base
@@ -47,7 +47,7 @@ class Image(Base):
     __tablename__ = "images"
 
     id = Column(Integer, primary_key=True, index=True)
-    data = Column(String)
+    data = Column(Text)
     recipe_id = Column(Integer, ForeignKey("recipes.id"))
 
     recipe = relationship("Recipe", back_populates="image")
