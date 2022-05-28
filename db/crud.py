@@ -95,6 +95,9 @@ def create_image(db: Session, image: schemas.ImageCreate):
 
 
 def delete_image(db: Session, image_id: int):
+    """
+    Delete an image.
+    """
     db_image = db.query(models.Image).get(image_id)
     db.delete(db_image)
     db.commit()
@@ -102,10 +105,16 @@ def delete_image(db: Session, image_id: int):
 
 
 def get_orders(db: Session, skip: int = 0, limit: int = 100):
+    """
+    Get all orders.
+    """
     return db.query(models.Order).offset(skip).limit(limit).all()
 
 
 def delete_order(db: Session, order_id: int):
+    """
+    Delete an order.
+    """
     db_order = db.query(models.Order).get(order_id)
     db.delete(db_order)
     db.commit()
@@ -113,6 +122,9 @@ def delete_order(db: Session, order_id: int):
 
 
 def create_session(db: Session, session: schemas.SessionCreate):
+    """
+    Create a new session.
+    """
     db_session = models.Session(**session.dict())
     db.add(db_session)
     db.commit()
@@ -121,14 +133,18 @@ def create_session(db: Session, session: schemas.SessionCreate):
 
 
 def get_sessions_by_user(db: Session, user_id: int):
+    """
+    Get all sessions for a user.
+    """
     return db.query(models.Session).filter(models.Session.user_id == user_id).all()
 
 
-def revoke_all_sessions(db: Session, user_name: str):
+def delete_all_sessions(db: Session, user_name: str):
+    """
+    Delete all sessions for a user.
+    """
     db_user = get_user_by_name(db, user_name)
     db_sessions = get_sessions_by_user(db, db_user.id)
-    for session in db_sessions:
-        # update revoked field
-        session.revoked = True
-        db.add(session)
+    for db_session in db_sessions:
+        db.delete(db_session)
     db.commit()

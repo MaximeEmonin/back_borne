@@ -20,6 +20,9 @@ class Bib(BibBase):
 
 class DistantUserBase(BaseModel):
     user: str
+
+
+class DistantUserLogin(DistantUserBase):
     password: str
 
 
@@ -108,7 +111,6 @@ class SessionBase(BaseModel):
     user_id: int
     max_date: datetime
     token: str
-    revoked: bool
 
 
 class SessionCreate(SessionBase):

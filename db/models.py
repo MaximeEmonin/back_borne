@@ -72,6 +72,5 @@ class Session(Base):
     token = Column(String, index=True)
     user_id = Column(Integer, ForeignKey("users.id"), index=True)
     max_date = Column(DateTime, index=True)
-    revoked = Column(Boolean, index=True)
 
     user = relationship("User")
