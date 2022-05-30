@@ -1,6 +1,6 @@
 import uuid
 from datetime import timedelta, datetime
-from typing import List, Dict
+from typing import List, Dict, TypedDict
 
 from fastapi import Depends, FastAPI, HTTPException
 from sqlalchemy.orm import Session
@@ -52,9 +52,12 @@ def get_db():
 
 sync_all(list(get_db())[0])
 
+TokenResponse = TypedDict("TokenResponse", {"token": str})
+LogoutResponse = TypedDict("LogoutResponse", {"message": str})
 
-@app.post('/login/')
-def login(user_request: DistantUserLogin, db: Session = Depends(get_db)):
+
+@app.post('/login/', response_model=TokenResponse)
+def login(user_request: DistantUserLogin, db: Session = Depends(get_db)) -> TokenResponse:
     """ admin login """
     user = crud.get_user_by_name(db, user_request.user)
     if user is None:
@@ -70,7 +73,7 @@ def login(user_request: DistantUserLogin, db: Session = Depends(get_db)):
     return {"token": session.token}
 
 
-@app.post('/logout/')
+@app.post('/logout/', response_model=LogoutResponse)
 def logout(user: DistantUserBase, db: Session = Depends(get_db)):
     """ admin logout """
     user = crud.delete_all_sessions(db, user.user)
