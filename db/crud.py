@@ -188,3 +188,21 @@ def delete_loaded_bib(db: Session, loaded_bib_id: int):
 def get_image(db: Session, recipe_id: int):
     """ Get the image for a recipe. """
     return db.query(models.Image).filter(models.Image.recipe_id == recipe_id).first()
+
+
+def recipe_set_price(db, recipe_id, price) -> models.Recipe:
+    """ Set the price of a recipe """
+    db_recipe = db.query(models.Recipe).get(recipe_id)
+    db_recipe.price = price
+    db.commit()
+    db.refresh(db_recipe)
+    return db_recipe
+
+
+def recipe_set_title(db, recipe_id, title) -> models.Recipe:
+    """ Set the name of a recipe """
+    db_recipe = db.query(models.Recipe).get(recipe_id)
+    db_recipe.title = title
+    db.commit()
+    db.refresh(db_recipe)
+    return db_recipe

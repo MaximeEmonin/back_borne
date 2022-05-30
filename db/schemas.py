@@ -81,11 +81,20 @@ class RecipeBase(BaseModel):
     price: float
 
 
+class RecipePrice(BaseModel):
+    price: float
+
+
+class RecipeTitle(BaseModel):
+    title: str
+
+
 class RecipeCreate(RecipeBase):
     id: int
 
 
 class Recipe(RecipeBase):
+
     id: int
     ingredients: list[Ingredient]
 

@@ -168,3 +168,16 @@ def replace_loaded_bib(replacement: LoadedBibReplacement, db: Session = Depends(
     
     return crud.get_loaded_bibs(db)
 
+
+@app.patch('/recipe/{recipe_id}/set_price', response_model=schemas.Recipe)
+def set_recipe_price(recipe_id: int, price_request: schemas.RecipePrice, db: Session = Depends(get_db)):
+    """ Set price of recipe """
+    recipe = crud.recipe_set_price(db, recipe_id, price_request.price)
+    return recipe
+
+
+@app.patch('/recipe/{recipe_id}/set_title', response_model=schemas.Recipe)
+def set_recipe_name(recipe_id: int, title_request: schemas.RecipeTitle, db: Session = Depends(get_db)):
+    """ Set name of recipe """
+    recipe = crud.recipe_set_title(db, recipe_id, title_request.title)
+    return recipe
