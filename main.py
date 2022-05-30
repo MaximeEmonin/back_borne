@@ -98,6 +98,17 @@ def get_recipes(alcool: bool, db: Session = Depends(get_db)):
             if adding:
                 new_recipes.append(recipe)
         recipes = new_recipes
+    else:
+        new_recipes: List[Recipe] = []
+        for recipe in recipes:
+            adding = False
+            for ingredient in recipe.ingredients:
+                if ingredient.bib.alcool:
+                    adding = True
+                    break
+            if adding:
+                new_recipes.append(recipe)
+        recipes = new_recipes
     # filter not feasible recipes because bib not loaded
     new_recipes: list[Recipe] = []
     for recipe in recipes:
