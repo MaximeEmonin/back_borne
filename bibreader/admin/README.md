@@ -1,15 +1,13 @@
-# Getting Started with Create React App
+# Interface de test de lecture/écriture de **bib**
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Interface `react` créée avec `create-react-app`, en `typescript`. L'interface est démarrée en utilisant la commande `yarn start` qui lance l'interface sur le port `3000`. L'intreface requiert le lancement parralèle du serveur de test java (port `8000`) pour la lecture/écriture des **bib** grâce au lecteur RFID.
 
-## Available Scripts
+## Bibliothèques
 
-In the project directory, you can run:
+Les bibliothèques suivantes sont utilisées :
 
-### `yarn start`
-
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
-
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+-   `material-ui` pour les composants de design
+-   `styled-components` pour l'ajout de css
+-   `react-hook-form` pour la gestion de formulaire
+-   `yup` pour la validation de formulaire
+-   `notistack` pour les notifications
