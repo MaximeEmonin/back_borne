@@ -160,3 +160,7 @@ class LoadedBibReplacement(BaseModel):
     old_bib_id: int
     new_bib_type: int
     new_bib_amount: int = 3000
+
+
+class State(BaseModel):
+    busy: bool

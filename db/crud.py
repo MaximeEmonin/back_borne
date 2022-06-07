@@ -58,6 +58,11 @@ def get_recipes(db: Session, skip: int = 0, limit: int = 100) -> List[models.Rec
     return db.query(models.Recipe).offset(skip).limit(limit).all()
 
 
+def get_recipe(db: Session, _id: int) -> models.Recipe:
+    """ Get a recipe by id """
+    return db.query(models.Recipe).get(_id)
+
+
 def create_recipe(db: Session, recipe: schemas.RecipeCreate):
     db_recipe = models.Recipe(**recipe.dict())
     db.add(db_recipe)

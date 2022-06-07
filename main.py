@@ -1,3 +1,4 @@
+import asyncio
 import uuid
 from datetime import timedelta, datetime
 from typing import List, Dict, TypedDict
@@ -13,6 +14,8 @@ from dotenv import load_dotenv
 from db.schemas import SessionCreate, DistantUserBase, DistantUserLogin, LoadedBibReplacement, Recipe, RecipesResponse
 from sync import mock_sync_all, sync_all
 from fastapi.middleware.cors import CORSMiddleware
+
+from pump import make_recipe, busy
 
 import os
 
@@ -50,7 +53,7 @@ def get_db():
         db.close()
 
 
-sync_all(list(get_db())[0])
+# sync_all(list(get_db())[0])
 
 TokenResponse = TypedDict("TokenResponse", {"token": str})
 LogoutResponse = TypedDict("LogoutResponse", {"message": str})
@@ -195,3 +198,20 @@ def set_recipe_name(recipe_id: int, title_request: schemas.RecipeTitle, db: Sess
     """ Set name of recipe """
     recipe = crud.recipe_set_title(db, recipe_id, title_request.title)
     return recipe
+
+
+@app.post('/recipe/{recipe_id}/make', response_model=schemas.State)
+async def recipe_command(recipe_id: int, db: Session = Depends(get_db)):
+    """ Make recipe """
+    if not busy():
+        recipe = crud.get_recipe(db, recipe_id)
+        asyncio.ensure_future(make_recipe(recipe))
+        return {'busy': busy()}
+    else:
+        raise HTTPException(status_code=409, detail="Machine is busy")
+
+
+@app.get('/state', response_model=schemas.State)
+def get_state(db: Session = Depends(get_db)):
+    """ Get state of the system """
+    return {'busy': True}
