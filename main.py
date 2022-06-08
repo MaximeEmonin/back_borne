@@ -19,6 +19,8 @@ from db.schemas import (
     LoadedBibReplacement,
     Recipe,
     RecipesResponse,
+    ImageCreate,
+    Image,
 )
 from sync import mock_sync_all, sync_all
 from fastapi.middleware.cors import CORSMiddleware
@@ -136,11 +138,6 @@ def get_recipes(alcool: bool, db: Session = Depends(get_db)):
         if adding:
             new_recipes.append(recipe)
     recipes = new_recipes
-    # add mock image if not present
-    for recipe in recipes:
-        if recipe.image is None:
-            with open("mock/images/1.jpeg", "rb") as file:
-                recipe.image = b64encode(file.read())
     # filter not feasible recipes because not enough amount in bibs
     not_feasible_recipes = []
     feasible_recipes = []
@@ -170,8 +167,15 @@ def get_recipes(alcool: bool, db: Session = Depends(get_db)):
 @app.get("/images/{recipe_id}", response_model=schemas.Image)
 def get_image(recipe_id: int, db: Session = Depends(get_db)):
     """Send image of recipe"""
-    print(recipe_id)
     image = crud.get_image(db, recipe_id)
+    if image is None:
+        with open("mock/images/1.jpeg", "rb") as file:
+            return Image(
+                **{
+                    "data": b64encode(file.read()),
+                    "recipe_id": recipe_id,
+                }
+            )
     return image
 
 
