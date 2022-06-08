@@ -12,12 +12,17 @@ Le serveur fait la liaison entre le contrôleur des BIBs, le contrôleur des pom
 
 ## Description Technique
 le serveur est codé en python, avec le Framework *FastAPI*.
+<<<<<<< HEAD
+=======
+On trouve une documentation très complète [en ligne](https://fastapi.tiangolo.com/).
+>>>>>>> dev
 La technologie de base de données est *PostgreSQL*.
 
 ## Documentation de l'API
 
 > NOTE: L'API retourne toutes les valeurs au format JSON
 
+<<<<<<< HEAD
 ### GET /bibs
 **renvoie**: liste de Bibs <br/>
 > **Exemple de réponse**: 
@@ -63,3 +68,6 @@ La technologie de base de données est *PostgreSQL*.
 >   },
 > ] 
 > ```
+=======
+Voir La [documentation **ReDoc**](documentation.html).
+>>>>>>> dev

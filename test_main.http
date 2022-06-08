@@ -1,11 +1,85 @@
 # Test your FastAPI endpoints
 
-GET http://127.0.0.1:8000/
+POST http://localhost:8000/login/
+Content-Type: application/json
+
+{
+  "user":"Cocktail.me",
+  "password":"test"
+}
+
+###
+
+POST http://localhost:8000/logout/
+Content-Type: application/json
+
+{
+    "user":"Cocktail.me",
+    "password":"test"
+}
+
+###
+
+GET http://localhost:8000/recipes/?alcool=true
 Accept: application/json
 
 ###
 
-GET http://127.0.0.1:8000/hello/User
+GET http://localhost:8000/images/1
 Accept: application/json
 
 ###
+
+POST http://localhost:8000/bibs/load/
+Content-Type: application/json
+
+{
+    "bib_id":"15",
+    "amount":"3000"
+}
+
+###
+
+POST http://localhost:8000/bibs/load/
+Content-Type: application/json
+
+{
+    "bib_id":"11",
+    "amount":"3000"
+}
+
+###
+
+PATCH http://localhost:8000/bibs/replace
+Content-Type: application/json
+
+{
+    "old_bib_id":"1",
+    "new_bib_type":"14",
+    "new_bib_amount":"3000"
+}
+
+###
+
+PATCH http://localhost:8000/recipe/1/set_price
+Content-Type: application/json
+
+{
+    "price":"10"
+}
+
+###
+
+PATCH http://localhost:8000/recipe/1/set_title
+Content-Type: application/json
+
+{
+    "title":"Mojito test"
+}
+
+###
+
+POST  http://localhost:8000/recipe/1/make
+Content-Type: application/json
+
+{}
