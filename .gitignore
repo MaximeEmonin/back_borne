@@ -1,9 +1,9 @@
 .idea
 .env
-<<<<<<< HEAD
+
 
 **/__pycache__
-=======
+
 db/__pycache__/
 __pycache__/
->>>>>>> dev
+
