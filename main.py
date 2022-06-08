@@ -2,16 +2,12 @@ import asyncio
 import uuid
 from base64 import b64encode
 from datetime import timedelta, datetime
-from typing import List, Dict, TypedDict
-
+from typing import List, TypedDict
 from fastapi import Depends, FastAPI, HTTPException
 from sqlalchemy.orm import Session
-
 from db import crud, models, schemas
 from db.database import SessionLocal, engine
-
 from dotenv import load_dotenv
-
 from db.schemas import (
     SessionCreate,
     DistantUserBase,
@@ -100,8 +96,15 @@ def logout(user: DistantUserBase, db: Session = Depends(get_db)):
 
 
 @app.get("/recipes", response_model=RecipesResponse)
-def get_recipes(alcool: bool, db: Session = Depends(get_db)):
-    """Send all feasible recipes"""
+def get_recipes(
+    alcool: bool, db: Session = Depends(get_db)
+) -> {"feasible": List[Recipe], "not_feasible": List[Recipe]}:
+    """
+    Returns feasible or almost feasible recipes, considering the currently loaded bibs
+
+    :arg alcool: if true, returns only alcool recipes, if false, returns only non-alcool recipes
+    :return: recipes currently feasible, recipes currently not feasible because one of the required bibs is loaded but empty
+    """
     recipes = crud.get_recipes(db)
     loaded_bibs = crud.get_loaded_bibs(db)
     # filter alcool recipes

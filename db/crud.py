@@ -9,10 +9,12 @@ class BIBException(Exception):
     """
     Exception for BIB errors.
     """
+
     pass
 
 
 def get_bibs(db: Session, skip: int = 0, limit: int = 100):
+    """Get All bibs"""
     return db.query(models.Bib).offset(skip).limit(limit).all()
 
 
@@ -59,7 +61,7 @@ def get_recipes(db: Session, skip: int = 0, limit: int = 100) -> List[models.Rec
 
 
 def get_recipe(db: Session, _id: int) -> models.Recipe:
-    """ Get a recipe by id """
+    """Get a recipe by id"""
     return db.query(models.Recipe).get(_id)
 
 
@@ -166,12 +168,12 @@ def delete_all_sessions(db: Session, user_name: str):
 
 
 def get_loaded_bibs(db: Session) -> List[LoadedBib]:
-    """ Get all loaded bibs """
+    """Get all loaded bibs"""
     return db.query(models.LoadedBib).all()
 
 
 def create_loaded_bib(db: Session, bib_id: int, amount: int = 3000):
-    """ Create a new loaded_bib object """
+    """Create a new loaded_bib object"""
     if len(get_loaded_bibs(db)) > 6:
         raise BIBException("There are already 6 loaded bibs. Cannot load more.")
 
@@ -183,7 +185,7 @@ def create_loaded_bib(db: Session, bib_id: int, amount: int = 3000):
 
 
 def delete_loaded_bib(db: Session, loaded_bib_id: int):
-    """ Delete a loaded_bib object """
+    """Delete a loaded_bib object"""
     db_loaded_bib = db.query(models.LoadedBib).get(loaded_bib_id)
     db.delete(db_loaded_bib)
     db.commit()
@@ -191,12 +193,12 @@ def delete_loaded_bib(db: Session, loaded_bib_id: int):
 
 
 def get_image(db: Session, recipe_id: int):
-    """ Get the image for a recipe. """
+    """Get the image for a recipe."""
     return db.query(models.Image).filter(models.Image.recipe_id == recipe_id).first()
 
 
 def recipe_set_price(db, recipe_id, price) -> models.Recipe:
-    """ Set the price of a recipe """
+    """Set the price of a recipe"""
     db_recipe = db.query(models.Recipe).get(recipe_id)
     db_recipe.price = price
     db.commit()
@@ -205,7 +207,7 @@ def recipe_set_price(db, recipe_id, price) -> models.Recipe:
 
 
 def recipe_set_title(db, recipe_id, title) -> models.Recipe:
-    """ Set the name of a recipe """
+    """Set the name of a recipe"""
     db_recipe = db.query(models.Recipe).get(recipe_id)
     db_recipe.title = title
     db.commit()

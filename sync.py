@@ -408,6 +408,8 @@ def sync_recipes(db):
         del recipe["author"]
         del recipe["date"]
         del recipe["alcool"]
+        if recipe["description"] is None:
+            recipe["description"] = ""
 
     for recipe in local_recipes:
         del recipe["author"]
