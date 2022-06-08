@@ -6,6 +6,7 @@ from datetime import datetime
 
 class BibBase(BaseModel):
     name: str
+    description: str
     id: int
     alcool: bool
 
@@ -15,7 +16,6 @@ class BibCreate(BibBase):
 
 
 class Bib(BibBase):
-
     class Config:
         orm_mode = True
 
@@ -38,7 +38,6 @@ class UserCreate(UserBase):
 
 
 class User(UserBase):
-
     class Config:
         orm_mode = True
 
@@ -53,7 +52,6 @@ class ImageCreate(ImageBase):
 
 
 class Image(ImageBase):
-
     class Config:
         orm_mode = True
 
@@ -120,7 +118,6 @@ class OrderCreate(OrderBase):
 
 
 class Order(OrderBase):
-
     class Config:
         orm_mode = True
 
@@ -136,7 +133,6 @@ class SessionCreate(SessionBase):
 
 
 class Session(SessionBase):
-
     class Config:
         orm_mode = True
 
@@ -150,6 +146,21 @@ class LoadedBibCreate(LoadedBibBase):
 
 
 class LoadedBib(LoadedBibBase):
+    bib: Bib
+
+    class Config:
+        orm_mode = True
+
+
+class UnloadedBibBase(BaseModel):
+    amount: int
+
+
+class UnloadedBibCreate(LoadedBibBase):
+    bib_id: int
+
+
+class UnloadedBib(LoadedBibBase):
     bib: Bib
 
     class Config:

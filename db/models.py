@@ -1,4 +1,13 @@
-from sqlalchemy import Column, ForeignKey, Integer, String, DateTime, Text, Boolean, Float
+from sqlalchemy import (
+    Column,
+    ForeignKey,
+    Integer,
+    String,
+    DateTime,
+    Text,
+    Boolean,
+    Float,
+)
 from sqlalchemy.orm import relationship
 
 from .database import Base
@@ -17,6 +26,7 @@ class Bib(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String(255), nullable=False)
+    description = Column(String(255), nullable=False)
     alcool = Column(Boolean, nullable=False)
 
 
@@ -36,9 +46,9 @@ class Recipe(Base):
 
 class Ingredient(Base):
     __tablename__ = "ingredients"
-    recipe_id = Column(Integer, ForeignKey('recipes.id'), primary_key=True)
-    bib_id = Column(Integer, ForeignKey('bibs.id'), primary_key=True)
-    amount = Column(Integer, primary_key=True)
+    recipe_id = Column(Integer, ForeignKey("recipes.id"), primary_key=True)
+    bib_id = Column(Integer, ForeignKey("bibs.id"), primary_key=True)
+    amount = Column(Integer, nullable=False)
 
     bib = relationship("Bib")
 
@@ -86,3 +96,11 @@ class LoadedBib(Base):
     amount = Column(Integer, index=True)
 
     bib = relationship("Bib")
+
+
+class UnloadedBib(Base):
+    __tablename__ = "unloaded_bibs"
+
+    id = Column(Integer, primary_key=True, index=True)
+    bib_id = Column(Integer, ForeignKey("bibs.id"), index=True)
+    amount = Column(Integer, index=True)

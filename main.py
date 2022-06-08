@@ -53,7 +53,7 @@ def get_db():
         db.close()
 
 
-# sync_all(list(get_db())[0])
+sync_all(list(get_db())[0])
 
 TokenResponse = TypedDict("TokenResponse", {"token": str})
 LogoutResponse = TypedDict("LogoutResponse", {"message": str})
