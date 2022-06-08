@@ -306,6 +306,9 @@ def mock_sync_loaded_bibs(db):
         {"bib_id": 11, "amount": 3000},
         {"bib_id": 5, "amount": 3000},
         {"bib_id": 12, "amount": 3000},
+        {"bib_id": 1, "amount": 3000},
+        {"bib_id": 2, "amount": 3000},
+        {"bib_id": 3, "amount": 3000},
     ]
     delete_count = 0
     for local_loaded_bib in local_loaded_bibs:
